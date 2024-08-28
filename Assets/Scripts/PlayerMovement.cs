@@ -6,8 +6,9 @@ public class PlayerMovement : MonoBehaviour
 {
     public static PlayerMovement instance;
 
-    [Header("Lanes")]
+    [Header("General")]
     public Transform[] Lanes;
+    public GameObject GameOverUI;
 
     [Header("Stats")]
     public float coyoteTime;
@@ -24,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
     private CapsuleCollider playerCol;
 
     private int laneSpecifier = 0;
+    private int startGravityMult;
     private float gravity;
     private float ySpeed;
     private float? lastGroundedTime;
@@ -52,20 +54,22 @@ public class PlayerMovement : MonoBehaviour
         inputActions.Inputs.Crouch.started += Crouch;
         inputActions.Inputs.Jump.started += Jump;
 
-        gravity = Physics.gravity.y * gravityMultiplier;
         lastSpedUpTime = Time.time;
         laneSpecifier = 1;
         playerCol = GetComponent<CapsuleCollider>();
         playerColStartHeight = playerCol.height;
+        startGravityMult = gravityMultiplier;
     }
 
     private void Update()
     {
+        gravity = Physics.gravity.y * gravityMultiplier;
         ySpeed += gravity * Time.deltaTime;
         playerVelocity.z = 1 * playerSpeed;
 
         if (isGrounded)
         {
+            transform.position = new Vector3(transform.position.x, 1.5f, transform.position.z);
             lastGroundedTime = Time.time;
             playerVelocity.y = 0;
             ySpeed = 0;
@@ -96,6 +100,17 @@ public class PlayerMovement : MonoBehaviour
         transform.Translate(playerVelocity * Time.deltaTime, Space.World);
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.collider.tag == "Obstacle")
+        {
+            GameOverUI.SetActive(true);
+            Time.timeScale = 0;
+            inputActions.Inputs.Disable();
+            inputActions = null;
+        }
+    }
+
     private void MoveRight(InputAction.CallbackContext context)
     {
         if (laneSpecifier < 2)
@@ -121,6 +136,7 @@ public class PlayerMovement : MonoBehaviour
             //TO DO: Play roll anim.
             isRolling = true;
             playerCol.height = playerColRollHeight;
+            gravityMultiplier = 10;
             StartCoroutine(FixColliderHeight());
         }
 
@@ -149,6 +165,7 @@ public class PlayerMovement : MonoBehaviour
     private IEnumerator FixColliderHeight()
     {
         yield return new WaitForSeconds(1);
+        gravityMultiplier = startGravityMult;
         playerCol.height = playerColStartHeight;
         isRolling = false;
     }
