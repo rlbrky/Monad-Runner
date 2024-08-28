@@ -16,17 +16,22 @@ public class PlayerMovement : MonoBehaviour
     public float playerSpeed = 2f;
     public float laneSwapTime = 2f;
     public float getFasterTimer = 5f;
+    public float playerColRollHeight;
 
     private PlayerInputs inputActions;
     private Coroutine onGoingRoutine;
+    private Vector3 playerVelocity;
+    private CapsuleCollider playerCol;
+
     private int laneSpecifier = 0;
     private float gravity;
     private float ySpeed;
     private float? lastGroundedTime;
     private float? jumpPressedTime;
     private float? lastSpedUpTime;
-    private Vector3 playerVelocity;
+    private float playerColStartHeight;
 
+    private bool isRolling;
     public bool isGrounded;
 
     private void Awake()
@@ -50,6 +55,8 @@ public class PlayerMovement : MonoBehaviour
         gravity = Physics.gravity.y * gravityMultiplier;
         lastSpedUpTime = Time.time;
         laneSpecifier = 1;
+        playerCol = GetComponent<CapsuleCollider>();
+        playerColStartHeight = playerCol.height;
     }
 
     private void Update()
@@ -109,7 +116,14 @@ public class PlayerMovement : MonoBehaviour
     
     private void Crouch(InputAction.CallbackContext context)
     {
-        //TO DO: Crouch for a specified time, than go up.
+        if (!isRolling)
+        {
+            //TO DO: Play roll anim.
+            isRolling = true;
+            playerCol.height = playerColRollHeight;
+            StartCoroutine(FixColliderHeight());
+        }
+
     }
 
     private void Jump(InputAction.CallbackContext context)
@@ -130,5 +144,12 @@ public class PlayerMovement : MonoBehaviour
         }
 
         transform.position = new Vector3(posX, transform.position.y, transform.position.z);
+    }
+
+    private IEnumerator FixColliderHeight()
+    {
+        yield return new WaitForSeconds(1);
+        playerCol.height = playerColStartHeight;
+        isRolling = false;
     }
 }
