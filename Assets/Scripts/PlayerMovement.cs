@@ -135,7 +135,8 @@ public class PlayerMovement : MonoBehaviour
         {
             //TO DO: Play roll anim.
             isRolling = true;
-            playerCol.height = playerColRollHeight;
+            //playerCol.height = playerColRollHeight;
+            transform.localScale = new Vector3(1, 0.5f, 1);
             gravityMultiplier = 10;
             StartCoroutine(FixColliderHeight());
         }
@@ -166,7 +167,8 @@ public class PlayerMovement : MonoBehaviour
     {
         yield return new WaitForSeconds(1);
         gravityMultiplier = startGravityMult;
-        playerCol.height = playerColStartHeight;
+        //playerCol.height = playerColStartHeight;
+        transform.localScale = Vector3.one;
         isRolling = false;
     }
 }

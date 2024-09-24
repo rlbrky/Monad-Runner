@@ -2484,11 +2484,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95acb97bfe65af443aae27ecccd2e7c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tiles:
-  - {fileID: 1559196201}
-  - {fileID: 708798281}
+  themedTiles:
+  - tiles:
+    - {fileID: 1559196201}
+    - {fileID: 708798281}
   tileNum: 0
   tilePos: 50
+  tileTheme: 0
   isCreatingTile: 0
 --- !u!4 &1627127083
 Transform:

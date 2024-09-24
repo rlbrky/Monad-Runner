@@ -4,12 +4,19 @@ using UnityEngine;
 
 public class TileGenerator : MonoBehaviour
 {
+    [System.Serializable]
+    public struct Tiles
+    {
+        public GameObject[] tiles;
+    }
+
     [Header("Tiles")]
-    [SerializeField] private GameObject[] tiles;
+    public Tiles[] themedTiles;
 
     [Header("Generating Properties")]
     [SerializeField] private int tileNum;
     [SerializeField] private int tilePos;
+    [SerializeField] private int tileTheme;
     [SerializeField] private bool isCreatingTile;
 
     private void Update()
@@ -17,18 +24,28 @@ public class TileGenerator : MonoBehaviour
         if(!isCreatingTile)
         {
             isCreatingTile = true;
-            StartCoroutine(GenerateTile());
-            StartCoroutine(GenerateTile());
-            StartCoroutine(GenerateTile());
+            GenerateTiles();
         }
     }
 
-    private IEnumerator GenerateTile()
+    private void FixedUpdate()
     {
-        tileNum = Random.Range(0, tiles.Length);
-        Instantiate(tiles[tileNum], new Vector3(0, 0, tilePos), Quaternion.identity);
-        tilePos += 50;
-        yield return new WaitForSeconds(3);
-        isCreatingTile = false;
+        // As of now adds 150 units into the position. We will optimize the spawn by doing it after the player reaches 120 unit mark.
+        // Previously it would spawn after 3 seconds, which is not ideal for optimization.
+        if (PlayerMovement.instance.transform.position.z >= (tilePos - 200))
+        {
+            Debug.Log("Creating tiles in the next frame.");
+            isCreatingTile = false;
+        }
+    }
+
+    private void GenerateTiles()
+    {
+        for(int i = 0; i < 3; i++)
+        {
+            tileNum = Random.Range(0, themedTiles[0].tiles.Length);
+            Instantiate(themedTiles[0].tiles[tileNum], new Vector3(0, 0, tilePos), Quaternion.identity);
+            tilePos += 50;
+        }
     }
 }
