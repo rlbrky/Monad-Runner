@@ -10,18 +10,20 @@ public class PlayerMovement : MonoBehaviour
     public Transform[] Lanes;
     public GameObject GameOverUI;
 
-    [Header("Stats")]
+    [Header("Jump")]
     public float coyoteTime;
     public float jumpHeight;
     public int gravityMultiplier = 1;
+    public float maxYSpeed = -10f;
+    [Header("Stats")]
     public float playerSpeed = 2f;
     public float laneSwapTime = 2f;
     public float getFasterTimer = 5f;
     public float playerColRollHeight;
 
+    private Vector3 forward;
     private PlayerInputs inputActions;
     private Coroutine onGoingRoutine;
-    private Vector3 playerVelocity;
     private CapsuleCollider playerCol;
 
     private int laneSpecifier = 0;
@@ -35,6 +37,16 @@ public class PlayerMovement : MonoBehaviour
 
     private bool isRolling;
     public bool isGrounded;
+
+    [Header("Slope Mech")]
+    [SerializeField] private float maxGroundAngle = 120;
+    [SerializeField] private float playerHeight = 0.5f;
+    [SerializeField] private float playerHeightPadding = 0.05f;
+    [SerializeField] private bool debug;
+    [SerializeField] private LayerMask groundMask;
+    private float groundAngle;
+    private RaycastHit hitInfo;
+
 
     private void Awake()
     {
@@ -65,29 +77,16 @@ public class PlayerMovement : MonoBehaviour
     {
         gravity = Physics.gravity.y * gravityMultiplier;
         ySpeed += gravity * Time.deltaTime;
-        playerVelocity.z = 1 * playerSpeed;
+        if(ySpeed < maxYSpeed)
+            ySpeed = maxYSpeed;
 
-        if (isGrounded)
-        {
-            transform.position = new Vector3(transform.position.x, 1.5f, transform.position.z);
-            lastGroundedTime = Time.time;
-            playerVelocity.y = 0;
-            ySpeed = 0;
-        }
-        else
-            playerVelocity.y = ySpeed;
+        CalculateForward();
+        CalculateGroundAngle();
+        CheckForGround();
+        ApplyGravity();
+        DrawDebugLines();
 
-        if (Time.time - lastGroundedTime <= coyoteTime)
-        {
-            if (Time.time - jumpPressedTime <= coyoteTime)
-            {
-                ySpeed = Mathf.Sqrt(jumpHeight * -3 * gravity);
-                jumpPressedTime = null;
-                lastGroundedTime = null;
-                isGrounded = false;
-            }
-        }
-
+        //Speed up the game after some time passes.
         if (Time.time - lastSpedUpTime > getFasterTimer)
         {
             playerSpeed += 1;
@@ -97,7 +96,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        transform.Translate(playerVelocity * Time.deltaTime, Space.World);
+        if (groundAngle >= maxGroundAngle) return;
+        transform.Translate(forward * playerSpeed * Time.deltaTime, Space.World);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -170,5 +170,89 @@ public class PlayerMovement : MonoBehaviour
         //playerCol.height = playerColStartHeight;
         transform.localScale = Vector3.one;
         isRolling = false;
+    }
+
+    /// <summary>
+    /// Calculates the forward vector for climbing ramps.
+    /// </summary>
+    private void CalculateForward()
+    {
+        if (!isGrounded)
+        {
+            forward = transform.forward;
+            return;
+        }
+
+        forward = Vector3.Cross(hitInfo.normal, -transform.right);
+    }
+
+    /// <summary>
+    /// Calculates the angle between ground and player.
+    /// </summary>
+    private void CalculateGroundAngle()
+    {
+        if (!isGrounded)
+        {
+            groundAngle = 90;
+            return;
+        }
+
+        groundAngle = Vector3.Angle(hitInfo.normal, transform.forward);
+    }
+
+    private void CheckForGround()
+    {
+        if (ySpeed > 0) return;
+
+        if(Physics.Raycast(transform.position, -Vector3.up, out hitInfo, playerHeight + playerHeightPadding, groundMask))
+        {
+            if(Vector3.Distance(transform.position, hitInfo.point) < playerHeight)
+            {
+                transform.position = Vector3.Lerp(transform.position, transform.position + Vector3.up * playerHeight, 5 * Time.deltaTime);
+            }
+            isGrounded = true;
+        }
+        else
+        {
+            isGrounded = false;
+        }
+    }
+
+    /// <summary>
+    /// Applies gravity and handles jumping functionality.
+    /// </summary>
+    private void ApplyGravity()
+    {
+        if (isGrounded)
+        {
+            //transform.position = new Vector3(transform.position.x, 1.5f, transform.position.z);
+            lastGroundedTime = Time.time;
+            //forward.y = 0;
+            ySpeed = 0;
+        }
+        else
+        {
+            forward.y = ySpeed;
+        }
+
+        //Jump functionality.
+        if (Time.time - lastGroundedTime <= coyoteTime)
+        {
+            if (Time.time - jumpPressedTime <= coyoteTime)
+            {
+                isGrounded = false;
+                ySpeed = Mathf.Sqrt(jumpHeight * -1.2f * gravity);
+                jumpPressedTime = null;
+                lastGroundedTime = null;
+            }
+        }
+    }
+
+    private void DrawDebugLines()
+    {
+        if (!debug) return;
+
+        Debug.DrawLine(transform.position, transform.position + forward * playerHeight * 2, Color.red);
+        Debug.DrawLine(transform.position, transform.position - Vector3.up * playerHeight, Color.magenta);
     }
 }

@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &4135568987023839074
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 8b5463d65a343ed4c87d665b62fbddd9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.432
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8b5463d65a343ed4c87d665b62fbddd9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.32
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8b5463d65a343ed4c87d665b62fbddd9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -19.924786
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8b5463d65a343ed4c87d665b62fbddd9, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8b5463d65a343ed4c87d665b62fbddd9, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8b5463d65a343ed4c87d665b62fbddd9, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8b5463d65a343ed4c87d665b62fbddd9, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8b5463d65a343ed4c87d665b62fbddd9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8b5463d65a343ed4c87d665b62fbddd9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8b5463d65a343ed4c87d665b62fbddd9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -678588488315902003, guid: 8b5463d65a343ed4c87d665b62fbddd9, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 7bd7e3606d858ab468d3d9040a69cdbe, type: 2}
+    - target: {fileID: 919132149155446097, guid: 8b5463d65a343ed4c87d665b62fbddd9, type: 3}
+      propertyPath: m_Name
+      value: MOYAKI LOW POLY MODEL
+      objectReference: {fileID: 0}
+    - target: {fileID: 4321514657177891973, guid: 8b5463d65a343ed4c87d665b62fbddd9, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 32d6f737bc92a88468a8b52a94433a60, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 8b5463d65a343ed4c87d665b62fbddd9, type: 3}

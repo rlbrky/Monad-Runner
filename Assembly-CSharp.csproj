@@ -59,7 +59,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Environment\TileDestroyer.cs" />
-    <Compile Include="Assets\Scripts\GroundCheck.cs" />
     <Compile Include="Assets\Scripts\Environment\TileGenerator.cs" />
     <Compile Include="Assets\Scripts\Inputs\PlayerInputs.cs" />
     <Compile Include="Assets\Scripts\UI\GameOverUI.cs" />

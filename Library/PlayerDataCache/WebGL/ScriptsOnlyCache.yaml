@@ -2,7 +2,6 @@ ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
     - GameOverUI
-    - GroundCheck
     - PlayerMovement
     - TileDestroyer
     - TileGenerator
@@ -33,9 +32,6 @@ ScriptsOnlyBuild:
     - TMPro.TMP_StyleSheet
     Unity.TextMeshPro.dll:
     - TMPro.TMP_FontAsset
-    - TMPro.TMP_Settings
-    - TMPro.TMP_SpriteAsset
-    - TMPro.TMP_StyleSheet
     - TMPro.TextMeshProUGUI
     Unity.Timeline.Editor.dll:
     - TimelinePreferences
@@ -169,8 +165,6 @@ ScriptsOnlyBuild:
       Script: {instanceID: 19514}
     - Class: 114
       Script: {instanceID: 19810}
-    - Class: 114
-      Script: {instanceID: 20014}
     - Class: 114
       Script: {instanceID: 20220}
     - Class: 114
@@ -867,12 +861,6 @@ ScriptsOnlyBuild:
   - hash:
       serializedVersion: 2
       Hash: 751e5bae2a317288c2ab58d66687092b
-    assemblyName: Assembly-CSharp
-    namespaceName: 
-    className: GroundCheck
-  - hash:
-      serializedVersion: 2
-      Hash: 751e5bae2a317288c2ab58d66687092b
     assemblyName: Unity.Timeline
     namespaceName: UnityEngine.Timeline
     className: ActivationPlayableAsset
@@ -1184,7 +1172,7 @@ ScriptsOnlyBuild:
     className: CinemachineImpulseListener
   - hash:
       serializedVersion: 2
-      Hash: 191820c136db10ffda5aa2cffc59532d
+      Hash: 9ba8a547933ad120f5ad1676f39bb080
     assemblyName: Assembly-CSharp
     namespaceName: 
     className: PlayerMovement
