@@ -5,6 +5,8 @@ ScriptsOnlyBuild:
     - PlayerMovement
     - TileDestroyer
     - TileGenerator
+    - TokenControl
+    - TokenSpawner
     Cinemachine.dll:
     - Cinemachine.CinemachineBrain
     - Cinemachine.CinemachineComposer
@@ -32,6 +34,9 @@ ScriptsOnlyBuild:
     - TMPro.TMP_StyleSheet
     Unity.TextMeshPro.dll:
     - TMPro.TMP_FontAsset
+    - TMPro.TMP_Settings
+    - TMPro.TMP_SpriteAsset
+    - TMPro.TMP_StyleSheet
     - TMPro.TextMeshProUGUI
     Unity.Timeline.Editor.dll:
     - TimelinePreferences
@@ -142,29 +147,31 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 16642}
+      Script: {instanceID: 16596}
     - Class: 114
-      Script: {instanceID: 16646}
+      Script: {instanceID: 16644}
     - Class: 114
-      Script: {instanceID: 17052}
+      Script: {instanceID: 16648}
     - Class: 114
-      Script: {instanceID: 17322}
+      Script: {instanceID: 17054}
     - Class: 114
-      Script: {instanceID: 17732}
+      Script: {instanceID: 17324}
     - Class: 114
-      Script: {instanceID: 17806}
+      Script: {instanceID: 17734}
     - Class: 114
-      Script: {instanceID: 17876}
+      Script: {instanceID: 17808}
     - Class: 114
-      Script: {instanceID: 18024}
+      Script: {instanceID: 17878}
     - Class: 114
-      Script: {instanceID: 18352}
+      Script: {instanceID: 18026}
     - Class: 114
-      Script: {instanceID: 19058}
+      Script: {instanceID: 18354}
     - Class: 114
-      Script: {instanceID: 19514}
+      Script: {instanceID: 19060}
     - Class: 114
-      Script: {instanceID: 19810}
+      Script: {instanceID: 19516}
+    - Class: 114
+      Script: {instanceID: 19812}
     - Class: 114
       Script: {instanceID: 20220}
     - Class: 114
@@ -172,22 +179,26 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 21220}
     - Class: 114
-      Script: {instanceID: 21252}
+      Script: {instanceID: 21446}
     - Class: 114
-      Script: {instanceID: 21448}
+      Script: {instanceID: 21808}
     - Class: 114
-      Script: {instanceID: 21810}
+      Script: {instanceID: 21920}
     - Class: 114
-      Script: {instanceID: 21922}
+      Script: {instanceID: 22584}
     - Class: 114
-      Script: {instanceID: 22586}
+      Script: {instanceID: 23278}
     - Class: 114
-      Script: {instanceID: 23280}
+      Script: {instanceID: 23500}
     - Class: 114
-      Script: {instanceID: 23502}
+      Script: {instanceID: 29058}
+    - Class: 114
+      Script: {instanceID: 35768}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
+      Script: {instanceID: 0}
+    - Class: 135
       Script: {instanceID: 0}
     - Class: 136
       Script: {instanceID: 0}
@@ -204,6 +215,12 @@ ScriptsOnlyBuild:
     - Class: 224
       Script: {instanceID: 0}
   scriptHashData:
+  - hash:
+      serializedVersion: 2
+      Hash: 6a356b04c25c0bb008c1b24bf8b0f996
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.UI
+    className: CanvasScaler
   - hash:
       serializedVersion: 2
       Hash: 751e5bae2a317288c2ab58d66687092b
@@ -1070,12 +1087,6 @@ ScriptsOnlyBuild:
     className: CinemachineBrain
   - hash:
       serializedVersion: 2
-      Hash: 6a356b04c25c0bb008c1b24bf8b0f996
-    assemblyName: UnityEngine.UI
-    namespaceName: UnityEngine.UI
-    className: CanvasScaler
-  - hash:
-      serializedVersion: 2
       Hash: 99459976c7ca8bbb7c787f6b78bae304
     assemblyName: Cinemachine
     namespaceName: Cinemachine
@@ -1172,7 +1183,7 @@ ScriptsOnlyBuild:
     className: CinemachineImpulseListener
   - hash:
       serializedVersion: 2
-      Hash: 9ba8a547933ad120f5ad1676f39bb080
+      Hash: eefc9ee0f32b123a9465b5dcf91ec63b
     assemblyName: Assembly-CSharp
     namespaceName: 
     className: PlayerMovement
@@ -1524,6 +1535,18 @@ ScriptsOnlyBuild:
     assemblyName: Unity.VisualScripting.Core
     namespaceName: Unity.VisualScripting
     className: UnityOnSliderValueChangedMessageListener
+  - hash:
+      serializedVersion: 2
+      Hash: 751e5bae2a317288c2ab58d66687092b
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: TokenControl
+  - hash:
+      serializedVersion: 2
+      Hash: 3004317f3dab64d4a77c36a3c2f8a119
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: TokenSpawner
   platform: 20
   scenePathNames:
   - Assets/Scenes/GameScene.unity

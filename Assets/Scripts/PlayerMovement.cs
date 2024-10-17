@@ -15,16 +15,23 @@ public class PlayerMovement : MonoBehaviour
     public float jumpHeight;
     public int gravityMultiplier = 1;
     public float maxYSpeed = -10f;
+    public float maxJumpForce = 10f;
+
     [Header("Stats")]
     public float playerSpeed = 2f;
     public float laneSwapTime = 2f;
     public float getFasterTimer = 5f;
     public float playerColRollHeight;
 
+    [Header("Shapeshift")]
+    public GameObject baseModel;
+    public GameObject[] monAnimals;
+
     private Vector3 forward;
     private PlayerInputs inputActions;
-    private Coroutine onGoingRoutine;
     private CapsuleCollider playerCol;
+    private Coroutine onGoingRoutine;
+    private Coroutine crouchRoutine;
 
     private int laneSpecifier = 0;
     private int startGravityMult;
@@ -79,6 +86,8 @@ public class PlayerMovement : MonoBehaviour
         ySpeed += gravity * Time.deltaTime;
         if(ySpeed < maxYSpeed)
             ySpeed = maxYSpeed;
+        if (ySpeed > maxJumpForce)
+            ySpeed = maxJumpForce;
 
         CalculateForward();
         CalculateGroundAngle();
@@ -98,6 +107,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (groundAngle >= maxGroundAngle) return;
         transform.Translate(forward * playerSpeed * Time.deltaTime, Space.World);
+        transform.Translate(Vector3.up * ySpeed * Time.deltaTime, Space.World);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -108,6 +118,16 @@ public class PlayerMovement : MonoBehaviour
             Time.timeScale = 0;
             inputActions.Inputs.Disable();
             inputActions = null;
+        }
+
+        if(collision.collider.tag == "Coin")
+        {
+            Destroy(collision.gameObject);
+            int random = Random.Range(0, monAnimals.Length);
+            baseModel.SetActive(false);
+            monAnimals[random].SetActive(true);
+            StartCoroutine(ShapeshiftRoutine(random));
+            //TO DO: Animation swap.
         }
     }
 
@@ -138,7 +158,7 @@ public class PlayerMovement : MonoBehaviour
             //playerCol.height = playerColRollHeight;
             transform.localScale = new Vector3(1, 0.5f, 1);
             gravityMultiplier = 10;
-            StartCoroutine(FixColliderHeight());
+            crouchRoutine = StartCoroutine(FixColliderHeight());
         }
 
     }
@@ -146,6 +166,10 @@ public class PlayerMovement : MonoBehaviour
     private void Jump(InputAction.CallbackContext context)
     {
         jumpPressedTime = Time.time;
+        StopCoroutine(crouchRoutine);
+        gravityMultiplier = startGravityMult;
+        transform.localScale = Vector3.one;
+        isRolling = false;
     }
 
     private IEnumerator SwapLane(float posX)
@@ -166,10 +190,17 @@ public class PlayerMovement : MonoBehaviour
     private IEnumerator FixColliderHeight()
     {
         yield return new WaitForSeconds(1);
-        gravityMultiplier = startGravityMult;
         //playerCol.height = playerColStartHeight;
+        gravityMultiplier = startGravityMult;
         transform.localScale = Vector3.one;
         isRolling = false;
+    }
+
+    private IEnumerator ShapeshiftRoutine(int animalCode)
+    {
+        yield return new WaitForSeconds(5f);
+        baseModel.SetActive(true);
+        monAnimals[animalCode].SetActive(false);
     }
 
     /// <summary>
@@ -230,10 +261,6 @@ public class PlayerMovement : MonoBehaviour
             //forward.y = 0;
             ySpeed = 0;
         }
-        else
-        {
-            forward.y = ySpeed;
-        }
 
         //Jump functionality.
         if (Time.time - lastGroundedTime <= coyoteTime)
@@ -241,7 +268,7 @@ public class PlayerMovement : MonoBehaviour
             if (Time.time - jumpPressedTime <= coyoteTime)
             {
                 isGrounded = false;
-                ySpeed = Mathf.Sqrt(jumpHeight * -1.2f * gravity);
+                ySpeed = Mathf.Sqrt(jumpHeight * -3f * gravity);
                 jumpPressedTime = null;
                 lastGroundedTime = null;
             }

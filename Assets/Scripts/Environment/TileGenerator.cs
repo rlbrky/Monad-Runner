@@ -45,6 +45,7 @@ public class TileGenerator : MonoBehaviour
         {
             tileNum = Random.Range(0, themedTiles[0].tiles.Length);
             Instantiate(themedTiles[0].tiles[tileNum], new Vector3(0, 0, tilePos), Quaternion.identity);
+            TokenSpawner.instance.SpawnTokens(tilePos, tilePos + 50);
             tilePos += 50;
         }
     }
