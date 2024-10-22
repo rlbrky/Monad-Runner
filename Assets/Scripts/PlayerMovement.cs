@@ -26,7 +26,9 @@ public class PlayerMovement : MonoBehaviour
     [Header("Shapeshift")]
     public GameObject baseModel;
     public GameObject[] monAnimals;
+    private Coroutine shapeShiftRoutine;
 
+    [Header("Private Stuff")]
     private Vector3 forward;
     private PlayerInputs inputActions;
     private CapsuleCollider playerCol;
@@ -41,11 +43,15 @@ public class PlayerMovement : MonoBehaviour
     private float? jumpPressedTime;
     private float? lastSpedUpTime;
     private float playerColStartHeight;
-
     private bool isRolling;
-    public bool isGrounded;
+
+    private bool movingRight;
+    private bool isLaneSwapping; //Crucial for damage system.
+    private bool checkingForDamage; //Crucial for damage system.
+
 
     [Header("Slope Mech")]
+    public bool isGrounded;
     [SerializeField] private float maxGroundAngle = 120;
     [SerializeField] private float playerHeight = 0.5f;
     [SerializeField] private float playerHeightPadding = 0.05f;
@@ -112,22 +118,59 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.collider.tag == "Obstacle")
+        if(collision.collider.tag == "Obstacle" && !isLaneSwapping)
         {
             GameOverUI.SetActive(true);
             Time.timeScale = 0;
             inputActions.Inputs.Disable();
             inputActions = null;
         }
+        else if(collision.collider.tag == "Obstacle" && isLaneSwapping)
+        {
+            Debug.Log("Player got damaged.");
+            StartCoroutine(DamageRoutine());
+            //TO DO: Activate Chase State.
+        }
 
         if(collision.collider.tag == "Coin")
         {
             Destroy(collision.gameObject);
             int random = Random.Range(0, monAnimals.Length);
-            baseModel.SetActive(false);
-            monAnimals[random].SetActive(true);
-            StartCoroutine(ShapeshiftRoutine(random));
+            if (baseModel.activeSelf) 
+            {
+                baseModel.SetActive(false);
+                monAnimals[random].SetActive(true);
+                shapeShiftRoutine = StartCoroutine(ShapeshiftRoutine(random));
+            }
+            else
+            {
+                foreach (var monAnimal in monAnimals)
+                    monAnimal.SetActive(false);
+
+                StopCoroutine(shapeShiftRoutine);
+                baseModel.SetActive(false);
+                monAnimals[random].SetActive(true);
+                shapeShiftRoutine = StartCoroutine(ShapeshiftRoutine(random));
+            }
             //TO DO: Animation swap.
+        }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.collider.tag == "Obstacle" && !isLaneSwapping && checkingForDamage)
+        {
+            isLaneSwapping = false;
+            StopCoroutine(onGoingRoutine);
+
+            if (movingRight)
+                laneSpecifier--;
+            else
+                laneSpecifier++;
+
+            transform.position = new Vector3(Lanes[laneSpecifier].position.x, transform.position.y, transform.position.z);
+
+            //TODO: Check for chase state.
         }
     }
 
@@ -136,6 +179,7 @@ public class PlayerMovement : MonoBehaviour
         if (laneSpecifier < 2)
         {
             laneSpecifier++;
+            movingRight = true;
             onGoingRoutine = StartCoroutine(SwapLane(Lanes[laneSpecifier].position.x));
         }
     }
@@ -144,6 +188,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (laneSpecifier > 0)
         {
+            movingRight = false;
             laneSpecifier--;
             onGoingRoutine = StartCoroutine(SwapLane(Lanes[laneSpecifier].position.x));
         }
@@ -176,6 +221,7 @@ public class PlayerMovement : MonoBehaviour
     {
         float time = 0;
         float startPos = transform.position.x;
+        isLaneSwapping = true;
 
         while (time <= laneSwapTime)
         {
@@ -184,6 +230,7 @@ public class PlayerMovement : MonoBehaviour
             yield return null;
         }
 
+        isLaneSwapping = false;
         transform.position = new Vector3(posX, transform.position.y, transform.position.z);
     }
 
@@ -201,6 +248,13 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(5f);
         baseModel.SetActive(true);
         monAnimals[animalCode].SetActive(false);
+    }
+
+    private IEnumerator DamageRoutine()
+    {
+        checkingForDamage = true;
+        yield return new WaitForSeconds(1f);
+        checkingForDamage = false;
     }
 
     /// <summary>
